@@ -1,4 +1,6 @@
 {
   "singleQuote": true,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "material-icon-theme.activeIconPack": "nest",
+  "printWidth": 60
 }
