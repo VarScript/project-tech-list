@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.0",
     "apollo-server-core": "^3.12.1",
+    "apollo-server-express": "^3.12.1",
     "graphql": "^16.8.1",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
