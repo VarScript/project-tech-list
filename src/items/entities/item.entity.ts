@@ -28,4 +28,8 @@ export class Item {
   @Column()
   @Field(() => Float)
   price: number;
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
+  description?: string;
 }

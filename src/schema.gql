@@ -7,6 +7,7 @@ type Item {
   name: String!
   quantity: Float!
   price: Float!
+  description: String
 }
 
 type Query {
@@ -21,12 +22,16 @@ type Mutation {
 }
 
 input CreateItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  quantity: Float!
+  price: Float!
+  description: String
 }
 
 input UpdateItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  name: String
+  quantity: Float
+  price: Float
+  description: String
   id: Int!
 }
