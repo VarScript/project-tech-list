@@ -35,16 +35,17 @@ export class ItemsResolver {
 
   @Query(() => Item, { name: 'item' })
   async findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+    @Args('id', { type: () => ID }, ParseUUIDPipe)
+    id: string,
   ): Promise<Item> {
     return this.itemsService.findOne(id);
   }
 
   @Mutation(() => Item)
-  updateItem(
+  async updateItem(
     @Args('updateItemInput')
     updateItemInput: UpdateItemInput,
-  ) {
+  ): Promise<Item> {
     return this.itemsService.update(
       updateItemInput.id,
       updateItemInput,
@@ -52,7 +53,10 @@ export class ItemsResolver {
   }
 
   @Mutation(() => Item)
-  removeItem(@Args('id', { type: () => Int }) id: number) {
+  removeItem(
+    @Args('id', { type: () => ID })
+    id: string,
+  ) {
     return this.itemsService.remove(id);
   }
 }
