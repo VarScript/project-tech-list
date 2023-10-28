@@ -1,12 +1,32 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { User } from './entities/user.entity';
+
+import { SignupInput } from '../auth/dto/inputs/signup-input';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
+  ) {}
+
+  async create(signupInput: SignupInput): Promise<User> {
+    try {
+      const newUser =
+        this.usersRepository.create(signupInput);
+      return await this.usersRepository.save(newUser);
+    } catch (error) {
+      console.log({error});
+      
+      throw new BadRequestException('Something went bad');
+    }
   }
 
   async findAll(): Promise<User[]> {
@@ -14,7 +34,9 @@ export class UsersService {
   }
 
   findOne(id: string): Promise<User> {
-    throw new NotFoundException(`The findOne method not implemented `);
+    throw new NotFoundException(
+      `The findOne method not implemented `,
+    );
   }
 
   // update(id: number, updateUserInput: UpdateUserInput) {
@@ -22,7 +44,9 @@ export class UsersService {
   // }
 
   block(id: string): Promise<User> {
-    throw new NotFoundException(`The block method not implemented `);
+    throw new NotFoundException(
+      `The block method not implemented `,
+    );
   }
 
   // remove(id: string): Promise<User> {

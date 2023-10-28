@@ -4,7 +4,6 @@ import {
   Int,
   ID,
 } from '@nestjs/graphql';
-import { IsEmail } from 'class-validator';
 import {
   Column,
   Entity,
@@ -24,7 +23,6 @@ export class User {
 
   @Column({ unique: true })
   @Field(() => String)
-  @IsEmail()
   email: string;
 
   @Column()
