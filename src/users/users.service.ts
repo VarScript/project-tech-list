@@ -8,9 +8,13 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
-import { SignupInput } from '../auth/dto/inputs/signup-input';
+import {
+  SignupInput,
+  SigninInput,
+} from '../auth/dto/inputs';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -23,8 +27,11 @@ export class UsersService {
 
   async create(signupInput: SignupInput): Promise<User> {
     try {
-      const newUser =
-        this.usersRepository.create(signupInput);
+      const newUser = this.usersRepository.create({
+        ...SigninInput,
+        password: bcrypt.hashSync(signupInput.password, 10),
+      });
+
       return await this.usersRepository.save(newUser);
     } catch (error) {
       this.handleDBError(error);
@@ -35,10 +42,14 @@ export class UsersService {
     return [];
   }
 
-  findOne(id: string): Promise<User> {
-    throw new NotFoundException(
-      `The findOne method not implemented `,
-    );
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      return await this.usersRepository.findOneByOrFail({
+        email,
+      });
+    } catch (error) {
+      throw new NotFoundException(`${email} not found`);
+    }
   }
 
   // update(id: number, updateUserInput: UpdateUserInput) {
@@ -55,14 +66,15 @@ export class UsersService {
   //   throw new NotFoundException(`The remove method not implemented `);
   // }
 
+  // ERRORS
   private handleDBError(error: any): never {
-    this.logger.error(error);
-
     if (error.code === '23505') {
       throw new BadRequestException(
         error.detail.replace('key', ''),
       );
     }
+
+    this.logger.error(error);
 
     throw new InternalServerErrorException(
       'Please check server logs',
