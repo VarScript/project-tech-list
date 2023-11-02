@@ -8,12 +8,16 @@ import { ConfigService } from '@nestjs/config';
 
 import { User } from '../../users/entities/user.entity';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(
   Strategy,
 ) {
-  constructor(configService: ConfigService) {
+  constructor(
+    private readonly authService: AuthService,
+    configService: ConfigService,
+  ) {
     super({
       secretOrKey: configService.get('JWT_SECRET'),
       jwtFromRequest:
@@ -22,8 +26,12 @@ export class JwtStrategy extends PassportStrategy(
   }
 
   async validate(payload: JwtPayload): Promise<User> {
-    console.log({ payload });
+    const { userId } = payload;
 
+    const user = await this.authService.validateUser(userId);
+
+    console.log({ user });
+    
     throw new UnauthorizedException('Not autorizated :( ');
   }
 }

@@ -52,6 +52,18 @@ export class UsersService {
     }
   }
 
+  async findOneById(id: string): Promise<User> {
+    try {
+      return await this.usersRepository.findOneByOrFail({
+        id,
+      });
+    } catch (error) {
+      throw new NotFoundException(
+        `User not found, please talk with an admin`,
+      );
+    }
+  }
+
   // update(id: number, updateUserInput: UpdateUserInput) {
   //   return `This action updates a #${id} user`;
   // }
