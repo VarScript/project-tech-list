@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
 
@@ -14,14 +15,20 @@ import { SigninInput } from './dto/inputs/signin-input';
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
+
+  private getJwt(userId: string) {
+    return this.jwtService.sign({ userId });
+  }
 
   async signup(
     signupInput: SignupInput,
   ): Promise<AuthResponse> {
     const user =
       await this.usersService.create(signupInput);
-    const token = 'ABC1234';
+
+    const token = this.getJwt(user.id);
 
     return { token, user };
   }
@@ -38,7 +45,8 @@ export class AuthService {
         'Email / password do not match',
       );
     }
-    const token = 'ABC123';
+
+    const token = this.getJwt(user.id);
 
     return { token, user };
   }

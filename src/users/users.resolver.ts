@@ -3,13 +3,10 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
   ID,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -23,8 +20,10 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => ID }) id: string): Promise<User> {
-    throw new Error ('Not inplemented')
+  findOne(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<User> {
+    throw new Error('Not inplemented');
   }
 
   // @Mutation(() => User)
@@ -39,7 +38,9 @@ export class UsersResolver {
   // }
 
   @Mutation(() => User)
-  blockUser(@Args('id', { type: () => ID }) id: string): Promise<User> {
+  blockUser(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<User> {
     return this.usersService.block(id);
   }
 

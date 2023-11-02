@@ -1,7 +1,14 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Query,
+  Resolver,
+} from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { SignupInput, SigninInput } from './dto/inputs';
 import { AuthResponse } from './types/auth-response.type';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -21,8 +28,11 @@ export class AuthResolver {
     return this.authService.signin(signinInput);
   }
 
-  // @Query( /** any */ , { name: 'revalidate' })
-  // revalidateToken() {
-  //   // return this.authService.revalidateToken();
-  // }
+  @Query(() => AuthResponse, { name: 'revalidate' })
+  @UseGuards(JwtAuthGuard)
+  revalidateToken(): AuthResponse {
+    // return this.authService.revalidateToken();
+
+    throw new Error('Not implemented');
+  }
 }
