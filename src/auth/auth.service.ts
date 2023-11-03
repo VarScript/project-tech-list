@@ -11,7 +11,6 @@ import { AuthResponse } from './types/auth-response.type';
 import { SignupInput } from './dto/inputs/signup-input';
 import { UsersService } from '../users/users.service';
 import { SigninInput } from './dto/inputs/signin-input';
-import { identity } from 'rxjs';
 import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
@@ -66,5 +65,11 @@ export class AuthService {
     delete user.password;
 
     return user;
+  }
+
+  revalidateToken(user: User): AuthResponse {
+    const token = this.getJwt(user.id);
+
+    return { user, token };
   }
 }
