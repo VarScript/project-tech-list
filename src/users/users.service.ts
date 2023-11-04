@@ -10,11 +10,9 @@ import { Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 
-import {
-  SignupInput,
-  SigninInput,
-} from '../auth/dto/inputs';
+import { SignupInput } from '../auth/dto/inputs';
 import { User } from './entities/user.entity';
+import { ValidRoles } from '../auth/enums/valid-roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -28,7 +26,7 @@ export class UsersService {
   async create(signupInput: SignupInput): Promise<User> {
     try {
       const newUser = this.usersRepository.create({
-        ...SigninInput,
+        ...signupInput,
         password: bcrypt.hashSync(signupInput.password, 10),
       });
 
@@ -38,8 +36,15 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return [];
+  async findAll(roles: ValidRoles[]): Promise<User[]> {
+    if (roles.length === 0)
+      return this.usersRepository.find();
+
+    return this.usersRepository
+      .createQueryBuilder()
+      .andWhere('ARRAY[roles] && ARRAY[:...roles]')
+      .setParameter('roles', roles)
+      .getMany();
   }
 
   async findOneByEmail(email: string): Promise<User> {

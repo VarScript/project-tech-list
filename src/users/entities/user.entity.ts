@@ -34,7 +34,7 @@ export class User {
     default: ['user'],
   })
   @Field(() => [String])
-  role: string[];
+  roles: string[];
 
   @Column({
     type: 'boolean',
