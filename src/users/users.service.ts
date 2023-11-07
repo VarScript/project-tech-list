@@ -13,6 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { SignupInput } from '../auth/dto/inputs';
 import { User } from './entities/user.entity';
 import { ValidRoles } from '../auth/enums/valid-roles.enum';
+import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
@@ -69,14 +70,32 @@ export class UsersService {
     }
   }
 
-  // update(id: number, updateUserInput: UpdateUserInput) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(
+    id: string,
+    updateUserInput: UpdateUserInput,
+    updateBy: User,
+  ): Promise<User> {
+    try {
+      const userUpdate = await this.usersRepository.preload(
+        {
+          ...updateUserInput,
+          id,
+        },
+      );
+      userUpdate.lastUpdateBy = updateBy;
 
-  block(id: string): Promise<User> {
-    throw new NotFoundException(
-      `The block method not implemented `,
-    );
+      return await this.usersRepository.save(userUpdate);
+    } catch (error) {
+      this.handleDBError(error);
+    }
+  }
+
+  async block(id: string, blockBy: User): Promise<User> {
+    const userBlock = await this.findOneById(id);
+    userBlock.isActive = false;
+    userBlock.lastUpdateBy = blockBy;
+
+    return await this.usersRepository.save(userBlock);
   }
 
   // remove(id: string): Promise<User> {

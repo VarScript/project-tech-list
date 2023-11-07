@@ -7,6 +7,8 @@ import {
 import {
   Column,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -43,5 +45,11 @@ export class User {
   @Field(() => Boolean)
   isActive: boolean;
 
-  //Todo: Relations and other things...
+  //Todo: Relations
+  @ManyToOne(() => User, (user) => user.lastUpdateBy, {
+    nullable: true, lazy: true
+  })
+  @JoinColumn({ name: 'lastUpdateBy' })
+  @Field(() => User, { nullable: true })
+  lastUpdateBy?: User;
 }
