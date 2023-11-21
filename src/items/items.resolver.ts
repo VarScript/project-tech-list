@@ -25,7 +25,7 @@ export class ItemsResolver {
     private readonly itemsService: ItemsService,
   ) {}
 
-  @Mutation(() => Item, {name: 'createInput'})
+  @Mutation(() => Item, { name: 'createInput' })
   async createItem(
     @CurrentUser() user: User,
     @Args('createItemInput')
@@ -45,7 +45,7 @@ export class ItemsResolver {
   async findOne(
     @Args('id', { type: () => ID }, ParseUUIDPipe)
     id: string,
-    @CurrentUser() user: User
+    @CurrentUser() user: User,
   ): Promise<Item> {
     return this.itemsService.findOne(id, user);
   }
@@ -54,10 +54,12 @@ export class ItemsResolver {
   async updateItem(
     @Args('updateItemInput')
     updateItemInput: UpdateItemInput,
+    @CurrentUser() user: User,
   ): Promise<Item> {
     return this.itemsService.update(
       updateItemInput.id,
       updateItemInput,
+      user,
     );
   }
 
@@ -65,7 +67,7 @@ export class ItemsResolver {
   removeItem(
     @Args('id', { type: () => ID })
     id: string,
-    @CurrentUser() user: User
+    @CurrentUser() user: User,
   ) {
     return this.itemsService.remove(id, user);
   }
