@@ -8,6 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -35,7 +36,11 @@ export class Item {
   @Field(() => String, { nullable: true })
   description?: string;
 
-  @ManyToOne(() => User, (user) => user.items)
+  @ManyToOne(() => User, (user) => user.items, {
+    nullable: false,
+    lazy: true,
+  })
+  @Index('userId-index')
   @Field(() => User)
   user: User;
 }

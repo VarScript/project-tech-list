@@ -10,6 +10,7 @@ import {
   UpdateItemInput,
 } from './dto/inputs';
 import { Item } from './entities/item.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ItemsService {
@@ -20,19 +21,31 @@ export class ItemsService {
 
   async create(
     createItemInput: CreateItemInput,
+    user: User,
   ): Promise<Item> {
-    const newItem =
-      this.itemRepository.create(createItemInput);
+    const newItem = this.itemRepository.create({
+      ...createItemInput,
+      user,
+    });
     return await this.itemRepository.save(newItem);
   }
 
-  async findAll(): Promise<Item[]> {
-    return this.itemRepository.find();
+  async findAll(user: User): Promise<Item[]> {
+    return await this.itemRepository.find({
+      where: {
+        user: {
+          id: user.id,
+        },
+      },
+    });
   }
 
-  async findOne(id: string): Promise<Item> {
+  async findOne(id: string, user: User): Promise<Item> {
     const item = await this.itemRepository.findOneBy({
       id,
+      user: {
+        id: user.id,
+      },
     });
     if (!item)
       throw new NotFoundException(
@@ -57,8 +70,9 @@ export class ItemsService {
     return this.itemRepository.save(item);
   }
 
-  async remove(id: string): Promise<Item> {
-    const item = await this.findOne(id);
+  async remove(id: string, user: User): Promise<Item> {
+    const item = await this.findOne(id, user);
+
     await this.itemRepository.remove(item);
     return { ...item, id };
   }
