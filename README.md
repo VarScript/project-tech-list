@@ -24,3 +24,5 @@ yarn start-dev
 ```
 http://localhost:3000/graphql
 ```
+
+7. Execute the __"mutation"__ to fill out the Database
