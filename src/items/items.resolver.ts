@@ -17,7 +17,7 @@ import {
 import {
   PaginationArgs,
   SearchArgs,
-} from '../common/dto/args/index';
+} from '../common/dto/args/';
 
 import { ItemsService } from './items.service';
 import { Item } from './entities/item.entity';
@@ -45,7 +45,11 @@ export class ItemsResolver {
     @Args() paginationsArgs: PaginationArgs,
     @Args() searchArgs: SearchArgs,
   ): Promise<Item[]> {
-    return this.itemsService.findAll(user, paginationsArgs);
+    return this.itemsService.findAll(
+      user,
+      paginationsArgs,
+      searchArgs,
+    );
   }
 
   @Query(() => Item, { name: 'item' })
