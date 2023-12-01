@@ -30,7 +30,7 @@ export class ItemsResolver {
     private readonly itemsService: ItemsService,
   ) {}
 
-  @Mutation(() => Item, { name: 'createInput' })
+  @Mutation(() => Item, { name: 'createItem' })
   async createItem(
     @CurrentUser() user: User,
     @Args('createItemInput')

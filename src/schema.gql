@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type List {
+  id: ID!
+  name: String!
+  user: User!
+}
+
 type User {
   id: ID!
   fullName: String!
@@ -26,11 +32,6 @@ type AuthResponse {
   user: User!
 }
 
-type List {
-  id: ID!
-  name: String!
-}
-
 type Query {
   revalidate: AuthResponse!
   users(roles: [ValidRoles!] = []): [User!]!
@@ -53,7 +54,7 @@ type Mutation {
   signin(signinInput: SigninInput!): AuthResponse!
   updateUser(updateUserInput: UpdateUserInput!): User!
   blockUser(id: ID!): User!
-  createInput(createItemInput: CreateItemInput!): Item!
+  createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   removeItem(id: ID!): Item!
 
@@ -98,12 +99,10 @@ input UpdateItemInput {
 }
 
 input CreateListInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
 }
 
 input UpdateListInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  id: String!
 }
