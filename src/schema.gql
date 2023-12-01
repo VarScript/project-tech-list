@@ -26,12 +26,19 @@ type AuthResponse {
   user: User!
 }
 
+type List {
+  id: ID!
+  name: String!
+}
+
 type Query {
   revalidate: AuthResponse!
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
+  lists: [List!]!
+  list(id: Int!): List!
 }
 
 """These are the roles to the api"""
@@ -52,6 +59,9 @@ type Mutation {
 
   """Execute construccion from the DB"""
   executeSeed: Boolean!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: Int!): List!
 }
 
 input SignupInput {
@@ -85,4 +95,15 @@ input UpdateItemInput {
   price: Float
   description: String
   id: String!
+}
+
+input CreateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
