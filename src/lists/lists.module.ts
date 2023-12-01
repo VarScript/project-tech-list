@@ -13,6 +13,7 @@ import { List } from './entities/list.entity';
     TypeOrmModule.forFeature([List])
   ],
   exports: [
+    ListsService,
     TypeOrmModule
   ]
 })

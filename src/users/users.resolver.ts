@@ -11,19 +11,23 @@ import {
 } from '@nestjs/graphql';
 
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
-import { ValidRolesArgs } from './dto/args/roles.arg';
+import { ItemsService } from '../items/items.service';
+import { ListsService } from '../lists/lists.service';
 
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
-import { UpdateUserInput } from './dto/update-user.input';
-import { ItemsService } from 'src/items/items.service';
-import { Item } from 'src/items/entities/item.entity';
+import { List } from '../lists/entities/list.entity';
+import { User } from './entities/user.entity';
+import { Item } from '../items/entities/item.entity';
+
 import {
   PaginationArgs,
   SearchArgs,
-} from 'src/common/dto/args';
+} from '../common/dto/args';
+import { ValidRolesArgs } from './dto/args/roles.arg';
+import { UpdateUserInput } from './dto/update-user.input';
+
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { ValidRoles } from '../auth/enums/valid-roles.enum';
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard)
@@ -31,6 +35,7 @@ export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
     private readonly itemsService: ItemsService,
+    private readonly listsService: ListsService,
   ) {}
 
   @Query(() => [User], { name: 'users' })
@@ -96,5 +101,13 @@ export class UsersResolver {
       paginationArgs,
       searchArgs,
     );
+  }
+
+  @ResolveField(() => [List], { name: 'lists' })
+  async getListsByUser(
+    @CurrentUser([ValidRoles.admin]) adminUser: User,
+    @Parent() user: User,
+  ): Promise<List[]> {
+    return this.listsService.findAll(user);
   }
 }
