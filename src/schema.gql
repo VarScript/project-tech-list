@@ -39,7 +39,7 @@ type Query {
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
   lists: [List!]!
-  list(id: Int!): List!
+  list(id: ID!): List!
 }
 
 """These are the roles to the api"""

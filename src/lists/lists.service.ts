@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateListInput } from './dto/inputs/create-list.input';
 import { UpdateListInput } from './dto/inputs/update-list.input';
 import { User } from 'src/users/entities/user.entity';
 import { List } from './entities/list.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ID } from '@nestjs/graphql';
 
 @Injectable()
 export class ListsService {
@@ -24,12 +28,29 @@ export class ListsService {
     return await this.listRepository.save(newList);
   }
 
-  findAll() {
-    return `This action returns all lists`;
+  async findAll(user: User): Promise<List[]> {
+    return await this.listRepository.find({
+      where: {
+        user: {
+          id: user.id,
+        },
+      },
+    });
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} list`;
+  async findOne(id: string, user: User): Promise<List> {
+    const list = await this.listRepository.findOneBy({
+      id,
+      user: {
+        id: user.id,
+      },
+    });
+    if (!list) {
+      throw new NotFoundException(
+        `The list with id: ${id} not found`,
+      );
+    }
+    return list;
   }
 
   update(id: string, updateListInput: UpdateListInput) {
