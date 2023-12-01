@@ -50,14 +50,16 @@ export class ListsResolver {
     return this.listsService.findOne(id, user);
   }
 
-  @Mutation(() => List)
-  updateList(
+  @Mutation(() => List, { name: 'updateList' })
+  async updateList(
     @Args('updateListInput')
     updateListInput: UpdateListInput,
-  ) {
+    @CurrentUser() user: User,
+  ): Promise<List> {
     return this.listsService.update(
       updateListInput.id,
       updateListInput,
+      user,
     );
   }
 

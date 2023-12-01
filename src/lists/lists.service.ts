@@ -53,8 +53,21 @@ export class ListsService {
     return list;
   }
 
-  update(id: string, updateListInput: UpdateListInput) {
-    return `This action updates a #${id} list`;
+  async update(
+    id: string,
+    updateListInput: UpdateListInput,
+    user: User,
+  ): Promise<List> {
+    await this.findOne(id, user);
+    const list =
+      await this.listRepository.preload(updateListInput);
+
+    if (!list) {
+      throw new NotFoundException(
+        `The list with id: ${id} not found`,
+      );
+    }
+    return this.listRepository.save(list);
   }
 
   remove(id: string) {
