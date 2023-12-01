@@ -61,7 +61,7 @@ export class ItemsResolver {
     return this.itemsService.findOne(id, user);
   }
 
-  @Mutation(() => Item, {name: 'updateItem'})
+  @Mutation(() => Item, { name: 'updateItem' })
   async updateItem(
     @Args('updateItemInput')
     updateItemInput: UpdateItemInput,
@@ -76,7 +76,7 @@ export class ItemsResolver {
 
   @Mutation(() => Item)
   removeItem(
-    @Args('id', { type: () => ID })
+    @Args('id', { type: () => ID }, ParseUUIDPipe)
     id: string,
     @CurrentUser() user: User,
   ) {

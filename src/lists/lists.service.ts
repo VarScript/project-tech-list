@@ -70,7 +70,10 @@ export class ListsService {
     return this.listRepository.save(list);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} list`;
+  async remove(id: string, user: User): Promise<List> {
+    const list = await this.findOne(id, user);
+
+    await this.listRepository.remove(list);
+    return { ...list, id };
   }
 }

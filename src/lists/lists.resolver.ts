@@ -63,8 +63,12 @@ export class ListsResolver {
     );
   }
 
-  @Mutation(() => List)
-  removeList(@Args('id', { type: () => Int }) id: string) {
-    return this.listsService.remove(id);
+  @Mutation(() => List, { name: 'removeList' })
+  removeList(
+    @Args('id', { type: () => ID }, ParseUUIDPipe)
+    id: string,
+    @CurrentUser() user: User,
+  ): Promise<List> {
+    return this.listsService.remove(id, user);
   }
 }

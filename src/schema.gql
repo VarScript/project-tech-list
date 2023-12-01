@@ -62,7 +62,7 @@ type Mutation {
   executeSeed: Boolean!
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
-  removeList(id: Int!): List!
+  removeList(id: ID!): List!
 }
 
 input SignupInput {
