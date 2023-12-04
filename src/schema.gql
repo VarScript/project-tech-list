@@ -2,12 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type List {
-  id: ID!
-  name: String!
-  user: User!
-}
-
 type User {
   id: ID!
   fullName: String!
@@ -21,12 +15,27 @@ type User {
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
 }
 
+type List {
+  id: ID!
+  name: String!
+  user: User!
+  listItem: [ListItem!]!
+}
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  item: Item!
+}
+
 type Item {
   id: ID!
   name: String!
   price: Float!
   description: String
   user: User!
+  listItem: [ListItem!]!
 }
 
 type AuthResponse {
@@ -42,6 +51,7 @@ type Query {
   item(id: ID!): Item!
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: ID!): List!
+  listItem(id: Int!): ListItem!
 }
 
 """These are the roles to the api"""
@@ -65,6 +75,9 @@ type Mutation {
 
   """Execute construccion from the DB"""
   executeSeed: Boolean!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
+  removeListItem(id: Int!): ListItem!
 }
 
 input SignupInput {
@@ -107,4 +120,15 @@ input CreateListInput {
 input UpdateListInput {
   name: String
   id: String!
+}
+
+input CreateListItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateListItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
