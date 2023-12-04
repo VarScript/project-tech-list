@@ -2,13 +2,18 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateListInput } from './dto/inputs/create-list.input';
-import { UpdateListInput } from './dto/inputs/update-list.input';
-import { User } from 'src/users/entities/user.entity';
-import { List } from './entities/list.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ID } from '@nestjs/graphql';
+
+import { CreateListInput } from './dto/inputs/create-list.input';
+import { UpdateListInput } from './dto/inputs/update-list.input';
+import {
+  PaginationArgs,
+  SearchArgs,
+} from '../common/dto/args';
+
+import { User } from '../users/entities/user.entity';
+import { List } from './entities/list.entity';
 
 @Injectable()
 export class ListsService {
@@ -28,14 +33,27 @@ export class ListsService {
     return await this.listRepository.save(newList);
   }
 
-  async findAll(user: User): Promise<List[]> {
-    return await this.listRepository.find({
-      where: {
-        user: {
-          id: user.id,
-        },
-      },
-    });
+  async findAll(
+    user: User,
+    paginationArgs: PaginationArgs,
+    searchArgs: SearchArgs,
+  ): Promise<List[]> {
+    const { limit, offset } = paginationArgs;
+    const { search } = searchArgs;
+
+    const queryBilder = this.listRepository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .where(`"userId" = :userId`, { userId: user.id });
+
+    if (search) {
+      queryBilder.andWhere('LOWER(name) like :name', {
+        name: `%${search.toLowerCase()}%`,
+      });
+    }
+
+    return queryBilder.getMany();
   }
 
   async findOne(id: string, user: User): Promise<List> {
@@ -59,8 +77,10 @@ export class ListsService {
     user: User,
   ): Promise<List> {
     await this.findOne(id, user);
-    const list =
-      await this.listRepository.preload(updateListInput);
+    const list = await this.listRepository.preload({
+      ...updateListInput,
+      user,
+    });
 
     if (!list) {
       throw new NotFoundException(
@@ -75,5 +95,15 @@ export class ListsService {
 
     await this.listRepository.remove(list);
     return { ...list, id };
+  }
+
+  async listCountByUser(user: User): Promise<number> {
+    return await this.listRepository.count({
+      where: {
+        user: {
+          id: user.id,
+        },
+      },
+    });
   }
 }

@@ -6,17 +6,21 @@ import {
   Int,
   ID,
 } from '@nestjs/graphql';
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 import { CreateListInput } from './dto/inputs/create-list.input';
 import { UpdateListInput } from './dto/inputs/update-list.input';
+import {
+  PaginationArgs,
+  SearchArgs,
+} from '../common/dto/args';
 
 import { User } from '../users/entities/user.entity';
 import { List } from './entities/list.entity';
 
 import { ListsService } from './lists.service';
-import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Resolver(() => List)
 @UseGuards(JwtAuthGuard)
@@ -37,8 +41,14 @@ export class ListsResolver {
   @Query(() => [List], { name: 'lists' })
   async findAll(
     @CurrentUser() user: User,
+    @Args() paginationsArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
   ): Promise<List[]> {
-    return this.listsService.findAll(user);
+    return this.listsService.findAll(
+      user,
+      paginationsArgs,
+      searchArgs,
+    );
   }
 
   @Query(() => List, { name: 'list' })

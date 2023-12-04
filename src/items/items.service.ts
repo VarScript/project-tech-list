@@ -15,7 +15,7 @@ import {
 } from '../common/dto/args/';
 
 import { Item } from './entities/item.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ItemsService {
