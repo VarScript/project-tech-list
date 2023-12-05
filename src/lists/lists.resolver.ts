@@ -91,7 +91,13 @@ export class ListsResolver {
   @ResolveField(() => [ListItem], { name: 'items' })
   async getListItems(
     @Parent() list: List,
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
   ): Promise<ListItem[]> {
-    return this.listItemService.findAll()
+    return this.listItemService.findAll(
+      list,
+      paginationArgs,
+      searchArgs,
+    );
   }
 }

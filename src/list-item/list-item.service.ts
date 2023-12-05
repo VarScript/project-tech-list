@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateListItemInput } from './dto/create-list-item.input';
 import { UpdateListItemInput } from './dto/update-list-item.input';
-import { InjectRepository } from '@nestjs/typeorm';
+import {
+  PaginationArgs,
+  SearchArgs,
+} from '../common/dto/args';
+
+import { List } from '../lists/entities/list.entity';
 import { ListItem } from './entities/list-item.entity';
-import { Repository } from 'typeorm';
-import { CreateListInput } from '../lists/dto/inputs/create-list.input';
 
 @Injectable()
 export class ListItemService {
@@ -26,8 +32,27 @@ export class ListItemService {
     return this.listItemRepository.save(newListItem);
   }
 
-  async findAll(): Promise<ListItem[]> {
-    return this.listItemRepository.find();
+  async findAll(
+    list: List,
+    paginationArgs: PaginationArgs,
+    searchArgs: SearchArgs,
+  ): Promise<ListItem[]> {
+    const { limit, offset } = paginationArgs;
+    const { search } = searchArgs;
+
+    const queryBilder = this.listItemRepository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .where(`"listId" = :listId`, { listId: list.id });
+
+    if (search) {
+      queryBilder.andWhere('LOWER(name) like :name', {
+        name: `%${search.toLowerCase()}%`,
+      });
+    }
+
+    return queryBilder.getMany();
   }
 
   findOne(id: number) {
