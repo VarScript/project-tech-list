@@ -33,6 +33,6 @@ export class List {
     nullable: true,
     lazy: true,
   })
-  @Field(() => [ListItem])
+  // @Field(() => [ListItem])
   listItem: ListItem[];
 }
