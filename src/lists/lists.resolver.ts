@@ -100,4 +100,11 @@ export class ListsResolver {
       searchArgs,
     );
   }
+
+  @ResolveField(() => Int, { name: 'totalItems' })
+  async listItemCountByList(
+    @Parent() list: List,
+  ): Promise<number> {
+    return this.listItemService.listItemCountByList(list);
+  }
 }

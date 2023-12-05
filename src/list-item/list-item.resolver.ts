@@ -31,6 +31,8 @@ export class ListItemResolver {
     return this.listItemService.create(createListItemInput);
   }
 
+  
+
   // @Query(() => [ListItem], { name: 'listItem' })
   // findAll() {
   //   return this.listItemService.findAll();
