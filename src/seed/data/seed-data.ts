@@ -23,9 +23,9 @@ export const SEED_USERS = [
 ];
 
 export const SEED_LISTS = [
-  { name: 'Supermercado' },
-  { name: 'Diario' },
-  { name: 'Fin de semana' },
+  { name: 'Pc' },
+  { name: 'Pc design' },
+  { name: 'Pc Gamer' },
 ];
 
 export const SEED_ITEMS = [
