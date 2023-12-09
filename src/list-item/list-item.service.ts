@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -55,15 +58,36 @@ export class ListItemService {
     return queryBilder.getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} listItem`;
+  async findOne(id: string): Promise<ListItem> {
+    const listItem =
+      await this.listItemRepository.findOneBy({ id });
+
+    if (!listItem)
+      throw new NotFoundException(
+        `List Item with id: ${id} not found`,
+      );
+
+    return listItem;
   }
 
-  update(
-    id: number,
+  async update(
+    id: string,
     updateListItemInput: UpdateListItemInput,
-  ) {
-    return `This action updates a #${id} listItem`;
+  ): Promise<ListItem> {
+    const { itemId, listId, ...rest } = updateListItemInput;
+
+    const queryBilder = this.listItemRepository
+      .createQueryBuilder()
+      .update()
+      .set(rest)
+      .where('id = :id', { id });
+
+    if (listId) queryBilder.set({ list: { id: listId } });
+    if (itemId) queryBilder.set({ item: { id: listId } });
+
+    queryBilder.execute();
+
+    return this.findOne(id);
   }
 
   remove(id: number) {
@@ -79,6 +103,4 @@ export class ListItemService {
       },
     });
   }
-
-  
 }
