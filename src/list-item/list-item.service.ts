@@ -32,7 +32,9 @@ export class ListItemService {
       list: { id: listId },
     });
 
-    return this.listItemRepository.save(newListItem);
+    await this.listItemRepository.save(newListItem);
+
+    return this.findOne(newListItem.id);
   }
 
   async findAll(
