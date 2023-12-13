@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank" style="margin-right: 50px;"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-  <a href="https://graphql.org" target="blank" style="margin-left: 50px;"><img src="https://graphql.org/img/logo.svg" width="200" alt="Graphql Logo" /></a>
-  <a href="https://www.docker.com/" target="blank" style="margin-left: 50px;"><img src="https://gist.githubusercontent.com/mrcodedev/8f9c3cc5698f98adecfaebd797b5714e/raw/5574cd201ebf8b1b128fc20043cc9ade37cf4baa/image-docker.png" width="270" alt="Graphql Logo" /></a>
-  <a href="https://www.postgresql.org/" target="blank" style="margin-left: 50px;"><img src="https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg" width="190" alt="Graphql Logo" /></a>
+  <a href="http://nestjs.com/" target="blank" style="margin-right: 50px;"><img src="https://nestjs.com/img/logo-small.svg" width="150" alt="Nest Logo" /></a>
+  <a href="https://graphql.org" target="blank" style="margin-left: 50px;"><img src="https://graphql.org/img/logo.svg" width="150" alt="Graphql Logo" /></a>
+  <a href="https://www.docker.com/" target="blank" style="margin-left: 50px;"><img src="https://gist.githubusercontent.com/mrcodedev/8f9c3cc5698f98adecfaebd797b5714e/raw/5574cd201ebf8b1b128fc20043cc9ade37cf4baa/image-docker.png" width="200" alt="Graphql Logo" /></a>
+  <a href="https://www.postgresql.org/" target="blank" style="margin-left: 50px;"><img src="https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg" width="140" alt="Graphql Logo" /></a>
 </p>
 
 ## Instructions
